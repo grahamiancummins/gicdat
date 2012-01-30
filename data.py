@@ -1,0 +1,48 @@
+#!/usr/bin/env python -3
+# encoding: utf-8
+
+#Created by Graham Cummins on Jul 7, 2011
+
+# Copyright (C) 2011 Graham I Cummins
+# This program is free software; you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any later 
+# version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT 
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
+# FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+# Place, Suite 330, Boston, MA 02111-1307 USA
+#
+
+from __future__ import print_function, unicode_literals
+import numpy as np
+
+
+
+class Data(object):
+	def __init__(self, shape, nbytes, vrange, logenc, dat):
+		self.shape = shape
+		self.nbytes = nbytes
+		self.range = vrange
+		self.log = logenc
+		self.dat = dat 
+		self.nrange = (-2**(self.nbytes*8-1), 2**(self.nbytes*8-1)-1)
+		self.npdtype = eval("np.int%i" % (self.nbytes/8,))
+	
+	def toarray(self):
+		if type(self.shape[-1]) == str:
+			ragged = self.dat.split(self.splitter)
+			
+	
+				
+							
+	def splitter(self):
+		return np.array([self.nrange[1]], self.npdtype()).tostring()
+			
+	
+	
+	

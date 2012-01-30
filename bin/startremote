@@ -1,0 +1,27 @@
+#!/bin/bash
+
+export PYTHONPATH=$HOME/code/wsu:$PYTHONPATH
+python -c "import gicdat.fstore as fs;fs.rebuild()"
+
+
+if [ "$1" != "serv" ];
+	then
+	echo "starting workers"
+	~/bin/gdworkers &> ~/.gicdat/fstore/worker.log < /dev/null  &
+fi
+if [ "$1" != "work" ];
+	then
+	if [ "$1" != "serv" ];
+		then
+		sleep 3s
+	fi
+	if [ -e ~/.gicdat/fstore/server.pid ];
+	then
+		echo "stoping extant server"
+		kill -9 `cat ~/.gicdat/fstore/server.pid`
+	fi
+	echo "starting server"
+	~/bin/srv.py &> ~/.gicdat/fstore/server.log < /dev/null  &
+	echo $! > ~/.gicdat/fstore/server.pid
+fi
+
