@@ -54,7 +54,7 @@ class Job(object):
 		self.o = outpath or ''
 		
 	def __str__(self):
-		return "Job: %s\n-----\n%s\n--------\n" % (self.t.__name__, str(self.p))	
+		return "Job: %s\n-----\n%s\n--------\n" % (self.t, str(self.p))	
 		
 	def gettf(self):
 		if self._t == None:
