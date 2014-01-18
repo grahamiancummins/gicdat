@@ -15,7 +15,7 @@
 ## 
 
 
-usage='''gic -c format fname 
+usage = '''gic -c format fname
 
 -c type (Convert) Don't open any interface. Instead convert the input files to
    the specified type (which should be a file name extension without the
@@ -24,23 +24,24 @@ usage='''gic -c format fname
 
 import sys, os, getopt
 
-if __name__=='__main__':
-	try:
-		options, files = getopt.getopt(sys.argv[1:], "hc:")
-	except getopt.error:
-		print usage
-		sys.exit()	
-	switches={}
-	for o in options:
-		switches[o[0].lstrip('-')]=o[1]
-	if switches.has_key('h'):
-		print usage
-		sys.exit()
-	if switches.has_key('c'):
-		import gicdat.io as gio
-		for f in files:
-			d = gio.read(f)
-			d.filetype = None
-			nfn = os.path.splitext(f)[0] + '.' + switches['c']
-			gio.write(d, nfn)
+if __name__ == '__main__':
+    try:
+        options, files = getopt.getopt(sys.argv[1:], "hc:")
+    except getopt.error:
+        print usage
+        sys.exit()
+    switches = {}
+    for o in options:
+        switches[o[0].lstrip('-')] = o[1]
+    if switches.has_key('h'):
+        print usage
+        sys.exit()
+    if switches.has_key('c'):
+        import gicdat.io as gio
+
+        for f in files:
+            d = gio.read(f)
+            d.filetype = None
+            nfn = os.path.splitext(f)[0] + '.' + switches['c']
+            gio.write(d, nfn)
 			

@@ -17,14 +17,15 @@
 #
 import time
 
-def timeit(f, args=(), prt = 1, **kw):
-	sta = time.time()
-	res = apply(f, args, kw)
-	etime = time.time() - sta
-	if prt:
-		print("Execution of %s took %.3g sec" % (f.__name__, etime))
-		if prt > 1:
-			print("Return value was:\n%s\n" % (str(res)))
-	return (res, etime)
+
+def timeit(f, args=(), prt=1, **kw):
+    sta = time.time()
+    res = apply(f, args, kw)
+    etime = time.time() - sta
+    if prt:
+        print("Execution of %s took %.3g sec" % (f.__name__, etime))
+        if prt > 1:
+            print("Return value was:\n%s\n" % (str(res)))
+    return (res, etime)
 
 

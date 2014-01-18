@@ -19,8 +19,8 @@
 from __future__ import print_function, unicode_literals
 from base import Tag
 
-	
-externalDocument_doc =''' 
+
+externalDocument_doc = '''
 This class specifies the tag type "externalDocument". To be an
 externalDocument, a node must 1) have attr 'tag' == 'externalDocument',
 have attr 'url' that is a string or unicode.
@@ -31,6 +31,6 @@ special treatment from the "read" and "write" functions of gicdat.io
 
 '''
 
-externalDocument_t = Tag({'_extern_url':'s'}, info = externalDocument_doc)
+externalDocument_t = Tag({'_extern_url': 's'}, info=externalDocument_doc)
 
 

@@ -25,22 +25,23 @@ import gicdat.search as gds
 
 nullsig = gds.pattern({})
 
-class Identity(Transform):
-	sig = nullsig
-	
-	def run(self, pars, out, messages):
-		for k in pars.keys(-1, subdockeys=False):
-			out[k] = pars[k]
 
+class Identity(Transform):
+    sig = nullsig
+
+    def run(self, pars, out, messages):
+        for k in pars.keys(-1, subdockeys=False):
+            out[k] = pars[k]
 
 
 class AddTo(Transform):
-	defaults = {'x':1.0}
-	sig = gds.pattern({'x':'ixz', 'addto':'ixz'})
-	
-	def run(self, pars, out, messages):
-		out['n'] = pars['x'] + pars['addto']
-		messages.append('ran addto')
+    defaults = {'x': 1.0}
+    sig = gds.pattern({'x': 'ixz', 'addto': 'ixz'})
+
+    def run(self, pars, out, messages):
+        out['n'] = pars['x'] + pars['addto']
+        messages.append('ran addto')
+
 
 id = Identity()
 add = AddTo()

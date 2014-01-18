@@ -28,69 +28,70 @@ notify associated controllers of changes.
 
 '''
 
-
 CONTROLLERS = []
-ENV = {'gui':False
-	  	
-	  }
+ENV = {'gui': False
 
+}
 
 if os.environ.get('GICDAT_CONF'):
-	CONF_DIR = os.environ['GICDAT_CONF']
+    CONF_DIR = os.environ['GICDAT_CONF']
 else:
-	CONF_DIR = os.path.join(os.environ['HOME'], ".gicdat")
+    CONF_DIR = os.path.join(os.environ['HOME'], ".gicdat")
 if not os.path.isdir(CONF_DIR):
-	os.mkdir(CONF_DIR)
+    os.mkdir(CONF_DIR)
 if not os.path.isfile(os.path.join(CONF_DIR, 'env.py')):
-	open(os.path.join(CONF_DIR, 'env.py'), 'w').write("{}")
+    open(os.path.join(CONF_DIR, 'env.py'), 'w').write("{}")
 ENV.update(eval(open(os.path.join(CONF_DIR, 'env.py')).read()))
 
 for path in ENV.get('path_prepend', []):
-	sys.path.insert(0, path)
+    sys.path.insert(0, path)
 
 for path in ENV.get('path', []):
-	sys.path.path(path)
-
-
+    sys.path.path(path)
 
 
 class GicdatError(StandardError):
-	'''Trivial exception subclass raised by Doc and Node "error" methods'''
-	pass
+    '''Trivial exception subclass raised by Doc and Node "error" methods'''
+    pass
+
 
 def asksecret(prompt="Password :"):
-	return getpass.getpass(prompt)
-	
+    return getpass.getpass(prompt)
+
+
 def report(s, t=None):
-	if not type(s) in [str, unicode]:
-		s = str(s)
-	if not t:
-		t = time.time()
-	for c in CONTROLLERS:
-		c.report(s, t)
-	if not CONTROLLERS:
-		if ENV.get('log'):
-			open(ENV['log'], 'a').write(s)
-		else:
-			print(s)
+    if not type(s) in [str, unicode]:
+        s = str(s)
+    if not t:
+        t = time.time()
+    for c in CONTROLLERS:
+        c.report(s, t)
+    if not CONTROLLERS:
+        if ENV.get('log'):
+            open(ENV['log'], 'a').write(s)
+        else:
+            print(s)
+
 
 def error(e, t=None, rep=False):
-	if not t:
-		t = time.time()
-	if rep:
-		s = StringIO.StringIO()
-		s.write(rep + "\n")
-		traceback.print_exception(e[0], e[1], e[2], file = s)
-		report(s.getvalue())
-		s.close()
-	else:
-		for c in CONTROLLERS:
-			c.error(e, t)
-		raise e
+    if not t:
+        t = time.time()
+    if rep:
+        s = StringIO.StringIO()
+        s.write(rep + "\n")
+        traceback.print_exception(e[0], e[1], e[2], file=s)
+        report(s.getvalue())
+        s.close()
+    else:
+        for c in CONTROLLERS:
+            c.error(e, t)
+        raise e
+
 
 def update(doc):
-	for c in CONTROLLERS:
-		c.update(doc)
+    for c in CONTROLLERS:
+        c.update(doc)
+
 
 blocks = None
 

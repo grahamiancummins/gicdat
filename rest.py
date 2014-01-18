@@ -1,4 +1,4 @@
-	#!/usr/bin/env python
+#!/usr/bin/env python
 # encoding: utf-8
 #Created by  on 2009-07-15.
 
@@ -19,78 +19,81 @@
 import urllib2
 from gicdat.control import report
 
+
 class PutRequest(urllib2.Request):
-	def get_method(self):
-		return "PUT"
+    def get_method(self):
+        return "PUT"
+
 
 class DeleteRequest(urllib2.Request):
-	def get_method(self):
-		return "DELETE"
+    def get_method(self):
+        return "DELETE"
+
 
 class Resource(object):
-	def __init__(self, url, authrealm = None, uname=None, passwd = None, ctype='text/plain'):
-		self.url = url
-		self.ctype = ctype
-		if not authrealm:
-			self.opener = urllib2.build_opener(urllib2.HTTPHandler)
-		else:
-			if authrealm == "Basic":
-				authhandler = urllib2.HTTPBasicAuthHandler()
-				authhandler.add_password(None, url, uname, passwd)
-			else:
-				authhandler = urllib2.HTTPDigestAuthHandler()
-				authhandler.add_password(authrealm, url, uname, passwd)
-			self.opener = urllib2.build_opener(authhandler)
-		
-	def build_request(self, verb, path,  headers, payload=None):
-		url = self.url + path
-		if verb == 'put':
-			req = PutRequest(url)
-		elif verb == 'delete':
-			req = DeleteRequest(url)
-		else:
-			req = urllib2.Request(url)
-		if payload:
-			req.add_data(payload)
-			cl =  len(payload)
-			req.add_header("Content-Length", cl)
-		for k in headers:
-			req.add_header(k, headers[k])
-		return req
-	
-	def send_request(self, verb, path, payload=None, ctype=None, headers=None):
-		if not headers:
-			headers = {}
-		if not 'Accept' in headers:
-			headers['Accept']=self.ctype
-		if ctype:
-			if verb == "get":
-				headers['Accept'] = ctype
-			else:
-				headers['Content-Type'] = ctype	
-		req = self.build_request(verb, path, headers, payload)
-		try:
-			s = self.opener.open(req).read()
-		except urllib2.HTTPError, e:
-			s = "ERROR %i:" % e.code + e.read()
-			report(s)
-			if 'www-authenticate' in e.hdrs:
-				report('Authentication required: %s' % e.hdrs['www-authenticate'])
-		return s
+    def __init__(self, url, authrealm=None, uname=None, passwd=None, ctype='text/plain'):
+        self.url = url
+        self.ctype = ctype
+        if not authrealm:
+            self.opener = urllib2.build_opener(urllib2.HTTPHandler)
+        else:
+            if authrealm == "Basic":
+                authhandler = urllib2.HTTPBasicAuthHandler()
+                authhandler.add_password(None, url, uname, passwd)
+            else:
+                authhandler = urllib2.HTTPDigestAuthHandler()
+                authhandler.add_password(authrealm, url, uname, passwd)
+            self.opener = urllib2.build_opener(authhandler)
 
-	def get(self, path, ctype =None, headers=None):
-		return self.send_request('get', path, None, ctype, headers)
+    def build_request(self, verb, path, headers, payload=None):
+        url = self.url + path
+        if verb == 'put':
+            req = PutRequest(url)
+        elif verb == 'delete':
+            req = DeleteRequest(url)
+        else:
+            req = urllib2.Request(url)
+        if payload:
+            req.add_data(payload)
+            cl = len(payload)
+            req.add_header("Content-Length", cl)
+        for k in headers:
+            req.add_header(k, headers[k])
+        return req
 
-	def post(self, path, payload, ctype=None, headers=None):
-		return self.send_request("post", path, payload, ctype, headers) 
+    def send_request(self, verb, path, payload=None, ctype=None, headers=None):
+        if not headers:
+            headers = {}
+        if not 'Accept' in headers:
+            headers['Accept'] = self.ctype
+        if ctype:
+            if verb == "get":
+                headers['Accept'] = ctype
+            else:
+                headers['Content-Type'] = ctype
+        req = self.build_request(verb, path, headers, payload)
+        try:
+            s = self.opener.open(req).read()
+        except urllib2.HTTPError, e:
+            s = "ERROR %i:" % e.code + e.read()
+            report(s)
+            if 'www-authenticate' in e.hdrs:
+                report('Authentication required: %s' % e.hdrs['www-authenticate'])
+        return s
 
-	def put(self, path, payload, ctype =None,headers=None):
-		return self.send_request("put", path, payload, ctype, headers) 
+    def get(self, path, ctype=None, headers=None):
+        return self.send_request('get', path, None, ctype, headers)
 
-	def delete(self, path):
-		return self.send_request("delete", path, None, None, None) 
+    def post(self, path, payload, ctype=None, headers=None):
+        return self.send_request("post", path, payload, ctype, headers)
 
-#be careful with the "/" on path and urlname. "//" and trailing "/" are not ignored 
+    def put(self, path, payload, ctype=None, headers=None):
+        return self.send_request("put", path, payload, ctype, headers)
+
+    def delete(self, path):
+        return self.send_request("delete", path, None, None, None)
+
+    #be careful with the "/" on path and urlname. "//" and trailing "/" are not ignored
 
 
 		

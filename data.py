@@ -22,27 +22,21 @@ from __future__ import print_function, unicode_literals
 import numpy as np
 
 
-
 class Data(object):
-	def __init__(self, shape, nbytes, vrange, logenc, dat):
-		self.shape = shape
-		self.nbytes = nbytes
-		self.range = vrange
-		self.log = logenc
-		self.dat = dat 
-		self.nrange = (-2**(self.nbytes*8-1), 2**(self.nbytes*8-1)-1)
-		self.npdtype = eval("np.int%i" % (self.nbytes/8,))
-	
-	def toarray(self):
-		if type(self.shape[-1]) == str:
-			ragged = self.dat.split(self.splitter)
-			
-	
-				
-							
-	def splitter(self):
-		return np.array([self.nrange[1]], self.npdtype()).tostring()
-			
-	
-	
-	
+    def __init__(self, shape, nbytes, vrange, logenc, dat):
+        self.shape = shape
+        self.nbytes = nbytes
+        self.range = vrange
+        self.log = logenc
+        self.dat = dat
+        self.nrange = (-2 ** (self.nbytes * 8 - 1), 2 ** (self.nbytes * 8 - 1) - 1)
+        self.npdtype = eval("np.int%i" % (self.nbytes / 8,))
+
+    def toarray(self):
+        if type(self.shape[-1]) == str:
+            ragged = self.dat.split(self.splitter)
+
+
+    def splitter(self):
+        return np.array([self.nrange[1]], self.npdtype()).tostring()
+

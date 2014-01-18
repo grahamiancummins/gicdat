@@ -19,6 +19,6 @@
 from __future__ import print_function, unicode_literals
 
 
-__all__ = ['gicparse', 'matlabparse', 'mienparse', 'tags', 
-           'seq','tests']
+__all__ = ['gicparse', 'matlabparse', 'mienparse', 'tags',
+           'seq', 'tests']
 

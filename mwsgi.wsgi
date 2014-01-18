@@ -20,9 +20,9 @@
 
 import sys, os
 
-thisdir =  os.path.split(__file__)[0]
+thisdir = os.path.split(__file__)[0]
 if not thisdir in sys.path:
-	sys.path.append(thisdir)
+    sys.path.append(thisdir)
 
 gdfs = os.path.join(thisdir, 'gdfs')
 #os.environ["GICDAT_FSTORE_DIR"] = gdfs

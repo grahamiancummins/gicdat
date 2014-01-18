@@ -19,24 +19,25 @@
 #
 
 import os, sys
+
 pth = os.path.join(os.environ['HOME'], 'code', 'wsu')
 if not pth in sys.path:
-	sys.path.append(pth)
+    sys.path.append(pth)
 
 import gicdat.control
 import gicdat.blocks
 import gicdat.jobs as js
 
-if len(sys.argv)<2:
-	bg = 0
+if len(sys.argv) < 2:
+    bg = 0
 else:
-	bg = int(sys.argv[1])		
-if len(sys.argv)<3 or sys.argv[2] == '_':
-	n = None
+    bg = int(sys.argv[1])
+if len(sys.argv) < 3 or sys.argv[2] == '_':
+    n = None
 else:
-	n = int(sys.argv[2])
-if len(sys.argv)<4:
-	dir = None
+    n = int(sys.argv[2])
+if len(sys.argv) < 4:
+    dir = None
 else:
-	dir = sys.argv[2]
+    dir = sys.argv[2]
 js.startworkers(n, bg)

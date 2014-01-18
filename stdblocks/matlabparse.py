@@ -24,28 +24,29 @@ import mat2py, gicdat.doc, numpy, gicdat.control
 
 
 class MatParse(Parser):
-	''' 
-	Handles Matlab v7 files (at least, most of them. Doesn't currently handle
-	sparse arrays
-	'''
-	
-	canread = ("application/matlab-mat",)
-	canwrite = ("application/matlab-mat",)
-	extensions = {"mat":"application/matlab-mat"}
+    '''
+    Handles Matlab v7 files (at least, most of them. Doesn't currently handle
+    sparse arrays
+    '''
 
-	def read(self, stream, filetype, **kw):
-		d = mat2py.read(stream)
-		return (gicdat.doc.Doc(d), None)
+    canread = ("application/matlab-mat",)
+    canwrite = ("application/matlab-mat",)
+    extensions = {"mat": "application/matlab-mat"}
 
-	def write(self, d, stream, filetype, **kw):
-		'''
-		d is a dictionary of gicdat.doc.Node instances, of the sort returned by
-		gicdat.Doc.allNodes(). Stream is a file-like object open in write mode.
-		filetype is a mime-type-like string. kw args are implementation
-		specific
+    def read(self, stream, filetype, **kw):
+        d = mat2py.read(stream)
+        return (gicdat.doc.Doc(d), None)
 
-		Write should return None
-		'''
-		mat2py.write(stream, d)
+    def write(self, d, stream, filetype, **kw):
+        '''
+        d is a dictionary of gicdat.doc.Node instances, of the sort returned by
+        gicdat.Doc.allNodes(). Stream is a file-like object open in write mode.
+        filetype is a mime-type-like string. kw args are implementation
+        specific
+
+        Write should return None
+        '''
+        mat2py.write(stream, d)
+
 
 mat_p = MatParse()

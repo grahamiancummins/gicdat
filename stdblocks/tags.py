@@ -22,7 +22,7 @@ from __future__ import print_function, unicode_literals
 from gicdat.base import Tag
 
 
-timeseries_doc= '''
+timeseries_doc = '''
 Tag type for "timeseries" data
 
 To be a timeseries, a node must have tag == 'timeseries', must specify some
@@ -39,12 +39,12 @@ visualization and analysis specify timeseries data as the input type
 
 '''
 
-timeseries_t = Tag({'tag':'=timeseries', 
-					'samplerate':'ix',
-					'start':'ix',
-					'dat':"2,X-# of ix"},
-					info=timeseries_doc)
-events_doc= '''
+timeseries_t = Tag({'tag': '=timeseries',
+                    'samplerate': 'ix',
+                    'start': 'ix',
+                    'dat': "2,X-# of ix"},
+                   info=timeseries_doc)
+events_doc = '''
 Tag type for "events" data
 
 To be events, a node must have tag == 'events', must specify some
@@ -65,7 +65,7 @@ such that an event value of i occurs at t = start+(i/samplerate). Many
 visualization and analysis specify event data as the input type, and 
 event data are used to condition timeseries data.
 
-'''					
+'''
 #events_t = Tag({'tag':'events', 
 #					'samplerate':search.REAL,
 #					'start':search.REAL,

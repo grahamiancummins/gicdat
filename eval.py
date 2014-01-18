@@ -67,7 +67,6 @@ Main server:
 
 '''
 
-
 AUTH = [None, None, None]
 
 vl = str('http://van-lorax.vancouver.wsu.edu/gd')
@@ -75,102 +74,104 @@ lh = str('http://localhost:4242')
 
 
 def auth(realm, uname, passwd):
-	AUTH[0] = realm
-	AUTH[1] = uname
-	AUTH[2] = passwd
+    AUTH[0] = realm
+    AUTH[1] = uname
+    AUTH[2] = passwd
+
 
 class GDDocServ(Resource):
-	def __init__(self, url, authrealm = None, uname=None, passwd =None):
-		Resource.__init__(self,url, authrealm, uname, passwd, 'application/json')
-	
-	def idof(self, s):
-		try:
-			id = json.loads(s)['id']
-		except:
-			raise NameError("No doc ID in response %s" % s)
-		return id
-	
-	def isok(self, s):
-		try:
-			ok = json.loads(s)['ok']
-			if ok:
-				return True
-		except:
-			pass
-		return False	
-	
-	def adddoc(self, doc):
-		s = jobs.d2str(doc)
-		try:
-			r = self.put('/doc', s, ctype=jobs.CTYPE)
-		except:
-			raise
-		return self.idof(r)
-	
-	def addjob(self, job, prs):
-		js = jobs.d2str(job.todoc())
-		url = '/job'
-		for i, p in enumerate(prs):
-			if i:
-				url =url+"&inp=%i" % p
-			else:
-				url = url+"?inp=%i" % p
-		r = self.put(url, js, ctype=jobs.CTYPE)
-		return self.idof(r)
-	
-	def collect(self, ret, delete, pref='j'):
-		d = gd.Doc()
-		for i, id in enumerate(ret):
-			di = self.get('/doc/%i' % id, ctype=jobs.CTYPE)
-			try:
-				di = jobs.str2d(di)
-			except:
-				raise ValueError('No document in response %s' % di)
-			d['%s%i' % (pref, i)] = di
-		if delete:
-			url = "/doc?" + "&".join(["id=%i" % i for i in delete])
-			z = self.delete(url)
-			if not self.isok(z):
-				report("WARNING: delete failed: %s" % z)
-		return d
-		
-	
-	def do_incr(self, seq, doc):
-		js, prs, ret = seq
-		if not prs:
-			prs = [[-1]] * len(js)
-		doc = jobs.subset(doc, js, prs)
-		did = self.adddoc(doc)
-		jids = []
-		for i, j in enumerate(js):
-			pr = [jids[x] for x in prs[i] if x>=0]
-			if -1 in prs[i]:
-				pr = [did]+pr
-			jids.append(self.addjob(j, pr))
-		if ret!=None:
-			ret = [jids[r] for r in ret]
-		else:
-			ret = jids
-		r = self.collect(ret, [did]+jids, 'j')
-		return r
-	
-	def do(self, seq, doc):
-		js, prs, ret = seq
-		d = gd.Doc()
-		d['inp'] = doc
-		d['prs'] = prs
-		d['ret'] = ret
-		for i in range(len(js)):
-			d['j%i' % i] = js[i].todoc()
-		r = self.put('/seq', jobs.d2str(d), 'application/zip', 
-					{'Accept':'application/zip'} )
-		try:
-			return jobs.str2d(r)
-		except:
-			print(r)
+    def __init__(self, url, authrealm=None, uname=None, passwd=None):
+        Resource.__init__(self, url, authrealm, uname, passwd, 'application/json')
+
+    def idof(self, s):
+        try:
+            id = json.loads(s)['id']
+        except:
+            raise NameError("No doc ID in response %s" % s)
+        return id
+
+    def isok(self, s):
+        try:
+            ok = json.loads(s)['ok']
+            if ok:
+                return True
+        except:
+            pass
+        return False
+
+    def adddoc(self, doc):
+        s = jobs.d2str(doc)
+        try:
+            r = self.put('/doc', s, ctype=jobs.CTYPE)
+        except:
+            raise
+        return self.idof(r)
+
+    def addjob(self, job, prs):
+        js = jobs.d2str(job.todoc())
+        url = '/job'
+        for i, p in enumerate(prs):
+            if i:
+                url = url + "&inp=%i" % p
+            else:
+                url = url + "?inp=%i" % p
+        r = self.put(url, js, ctype=jobs.CTYPE)
+        return self.idof(r)
+
+    def collect(self, ret, delete, pref='j'):
+        d = gd.Doc()
+        for i, id in enumerate(ret):
+            di = self.get('/doc/%i' % id, ctype=jobs.CTYPE)
+            try:
+                di = jobs.str2d(di)
+            except:
+                raise ValueError('No document in response %s' % di)
+            d['%s%i' % (pref, i)] = di
+        if delete:
+            url = "/doc?" + "&".join(["id=%i" % i for i in delete])
+            z = self.delete(url)
+            if not self.isok(z):
+                report("WARNING: delete failed: %s" % z)
+        return d
+
+
+    def do_incr(self, seq, doc):
+        js, prs, ret = seq
+        if not prs:
+            prs = [[-1]] * len(js)
+        doc = jobs.subset(doc, js, prs)
+        did = self.adddoc(doc)
+        jids = []
+        for i, j in enumerate(js):
+            pr = [jids[x] for x in prs[i] if x >= 0]
+            if -1 in prs[i]:
+                pr = [did] + pr
+            jids.append(self.addjob(j, pr))
+        if ret != None:
+            ret = [jids[r] for r in ret]
+        else:
+            ret = jids
+        r = self.collect(ret, [did] + jids, 'j')
+        return r
+
+    def do(self, seq, doc):
+        js, prs, ret = seq
+        d = gd.Doc()
+        d['inp'] = doc
+        d['prs'] = prs
+        d['ret'] = ret
+        for i in range(len(js)):
+            d['j%i' % i] = js[i].todoc()
+        r = self.put('/seq', jobs.d2str(d), 'application/zip',
+                     {'Accept': 'application/zip'})
+        try:
+            return jobs.str2d(r)
+        except:
+            print(r)
+
 
 def eval(seq, doc, serv):
-	rs = GDDocServ(serv)
-	rs.rsock=None
-	return  rs.do(seq, doc)
+    rs = GDDocServ(serv)
+    rs.rsock = None
+    return rs.do(seq, doc)
 		

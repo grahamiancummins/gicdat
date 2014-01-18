@@ -1,4 +1,3 @@
-
 ## Copyright (C) 2005-2006 Graham I Cummins
 ## This program is free software; you can redistribute it and/or modify it under 
 ## the terms of the GNU General Public License as published by the Free Software 
@@ -18,15 +17,15 @@ foo.so in ./build/lib.arch-id/'''
 from distutils.core import setup, Extension
 import sys, os, numpy
 
-includen=[numpy.get_include()]
+includen = [numpy.get_include()]
 
 module1 = Extension('eventtrains',
-					include_dirs=includen,
-                    sources = ['eventtrains.c'])
+                    include_dirs=includen,
+                    sources=['eventtrains.c'])
 
-setup (name = 'gicdat event train module',
-       version = '1.0',
-       description = 'Functions that manipulate or calculate statistics on sequences of events',
-       ext_modules = [module1])
+setup(name='gicdat event train module',
+      version='1.0',
+      description='Functions that manipulate or calculate statistics on sequences of events',
+      ext_modules=[module1])
 	   
 

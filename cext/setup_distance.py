@@ -1,4 +1,3 @@
-
 ## Copyright (C) 2005-2006 Graham I Cummins
 ## This program is free software; you can redistribute it and/or modify it under 
 ## the terms of the GNU General Public License as published by the Free Software 
@@ -18,15 +17,15 @@ foo.so in ./build/lib.arch-id/'''
 from distutils.core import setup, Extension
 import sys, os, numpy
 
-includen=[numpy.get_include()]
+includen = [numpy.get_include()]
 
 module1 = Extension('distance',
-					include_dirs=includen,
-                    sources = ['distance.c'])
+                    include_dirs=includen,
+                    sources=['distance.c'])
 
-setup (name = 'gicdat distance module',
-       version = '1.0',
-       description = 'Functions that calculate distance matrixes',
-       ext_modules = [module1])
+setup(name='gicdat distance module',
+      version='1.0',
+      description='Functions that calculate distance matrixes',
+      ext_modules=[module1])
 	   
 
